@@ -2,18 +2,18 @@
 
 bool parser::validDataType()
 {
-    lexicalAnalyzer::TokenType type = lexer.tokens[idx].type;
-    return type == lexer.BOOLEAN || type == lexer.NULLVALUE || type == lexer.STRINGTOKEN || type == lexer.NUMTOKEN;
+    TokenType type = _tokens[idx].type;
+    return type == BOOLEAN || type == NULLVALUE || type == STRINGTOKEN || type == NUMTOKEN;
 }
 
-bool parser::isClosingBracket(lexicalAnalyzer::TokenType &type)
+bool parser::isClosingBracket(TokenType &type)
 {
-    return type == lexer.RIGHTCURLYBRACES || type == lexer.RIGHTSQUAREBRACES;
+    return type == RIGHTCURLYBRACES || type == RIGHTSQUAREBRACES;
 }
 
 bool parser::validateIdx()
 {
-    return idx < lexer.tokens.size();
+    return idx < _tokens.size();
 }
 
 bool parser::parseBraces()
@@ -23,14 +23,14 @@ bool parser::parseBraces()
     {
         return false;
     }
-    if (lexer.tokens[idx].type == lexer.STRINGTOKEN)
+    if (_tokens[idx].type == STRINGTOKEN)
     {
         idx++;
         if (!validateIdx())
         {
             return false;
         }
-        if (lexer.tokens[idx].type != lexer.COLON)
+        if (_tokens[idx].type != COLON)
         {
             return false;
         }
@@ -39,14 +39,14 @@ bool parser::parseBraces()
         {
             return false;
         }
-        if (lexer.tokens[idx].type == lexer.LEFTCURLYBRACES)
+        if (_tokens[idx].type == LEFTCURLYBRACES)
         {
             if (!parseBraces())
             {
                 return false;
             }
         }
-        else if (lexer.tokens[idx].type == lexer.LEFTSQUAREBRACES)
+        else if (_tokens[idx].type == LEFTSQUAREBRACES)
         {
             if (!parseSquareBraces())
             {
@@ -59,20 +59,20 @@ bool parser::parseBraces()
         }
         else
         {
-            std::cout << "Unexpexted Value encountered " << lexer.tokens[idx].value << '\n';
+            std::cout << "Unexpexted Value encountered " << _tokens[idx].value << '\n';
             return false;
         }
         if (!validateIdx())
         {
             return false;
         }
-        if (lexer.tokens[idx].type == lexer.COMMA)
+        if (_tokens[idx].type == COMMA)
         {
-            if (idx + 1 >= lexer.tokens.size())
+            if (idx + 1 >= _tokens.size())
             {
                 return false;
             }
-            if (isClosingBracket(lexer.tokens[idx + 1].type))
+            if (isClosingBracket(_tokens[idx + 1].type))
             {
                 return false;
             }
@@ -81,7 +81,7 @@ bool parser::parseBraces()
                 return false;
             }
         }
-        else if (lexer.tokens[idx].type == lexer.RIGHTCURLYBRACES)
+        else if (_tokens[idx].type == RIGHTCURLYBRACES)
         {
             idx++;
         }
@@ -90,7 +90,7 @@ bool parser::parseBraces()
             return false;
         }
     }
-    else if (lexer.tokens[idx].type == lexer.RIGHTCURLYBRACES)
+    else if (_tokens[idx].type == RIGHTCURLYBRACES)
     {
         idx++;
     }
@@ -108,17 +108,17 @@ bool parser::parseSquareBraces()
     {
         return false;
     }
-    if (lexer.tokens[idx].type == lexer.LEFTCURLYBRACES || lexer.tokens[idx].type == lexer.LEFTSQUAREBRACES || validDataType())
+    if (_tokens[idx].type == LEFTCURLYBRACES || _tokens[idx].type == LEFTSQUAREBRACES || validDataType())
     {
 
-        if (lexer.tokens[idx].type == lexer.LEFTCURLYBRACES)
+        if (_tokens[idx].type == LEFTCURLYBRACES)
         {
             if (!parseBraces())
             {
                 return false;
             }
         }
-        else if (lexer.tokens[idx].type == lexer.LEFTSQUAREBRACES)
+        else if (_tokens[idx].type == LEFTSQUAREBRACES)
         {
 
             if (!parseSquareBraces())
@@ -136,14 +136,14 @@ bool parser::parseSquareBraces()
             return false;
         }
 
-        if (lexer.tokens[idx].type == lexer.COMMA)
+        if (_tokens[idx].type == COMMA)
         {
-            if (idx + 1 >= lexer.tokens.size())
+            if (idx + 1 >= _tokens.size())
             {
                 return false;
             }
 
-            if (isClosingBracket(lexer.tokens[idx + 1].type))
+            if (isClosingBracket(_tokens[idx + 1].type))
             {
                 return false;
             }
@@ -153,7 +153,7 @@ bool parser::parseSquareBraces()
                 return false;
             }
         }
-        else if (lexer.tokens[idx].type == lexer.RIGHTSQUAREBRACES)
+        else if (_tokens[idx].type == RIGHTSQUAREBRACES)
         {
             idx++;
         }
@@ -163,7 +163,7 @@ bool parser::parseSquareBraces()
             return false;
         }
     }
-    else if (lexer.tokens[idx].type == lexer.RIGHTSQUAREBRACES)
+    else if (_tokens[idx].type == RIGHTSQUAREBRACES)
     {
         idx++;
     }
@@ -176,15 +176,15 @@ bool parser::parseSquareBraces()
 // recursive parser
 bool parser::parse()
 {
-    switch (lexer.tokens[idx].type)
+    switch (_tokens[idx].type)
     {
-    case lexer.LEFTCURLYBRACES:
+    case LEFTCURLYBRACES:
         if (!parseBraces())
         {
             return false;
         }
         break;
-    case lexer.LEFTSQUAREBRACES:
+    case LEFTSQUAREBRACES:
         if (!parseSquareBraces())
         {
             return false;

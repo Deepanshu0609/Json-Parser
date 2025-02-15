@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include "src/lexicalAnalyzer.hpp"
-#include "src/parser.hpp"
+#include "lexicalAnalyzer.hpp"
+#include "parser.hpp"
 #include <chrono>
 int main(int argc, char *argv[])
 {
@@ -10,16 +10,16 @@ int main(int argc, char *argv[])
     auto start = std::chrono::high_resolution_clock::now();
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
-    
+    std::vector<Token> tokens;
     std::string buffer(size, '\0');
     file.read(&buffer[0], size);
-    lexicalAnalyzer lexAnalyzer(buffer);
+    lexicalAnalyzer lexAnalyzer(buffer, tokens);
     if (!lexAnalyzer.getlexicalResult())
     {
         std::cout << "Failed in lexical Analysis\n";
         return 1;
     }
-    parser parse(lexAnalyzer);
+    parser parse(tokens);
     bool parse_result = parse.parse();
     if (parse_result)
     {

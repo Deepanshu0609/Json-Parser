@@ -1,7 +1,7 @@
-#include "lexicalAnalyzer.hpp"
+#include "../include/lexicalAnalyzer.hpp"
 #include <regex>
 
-lexicalAnalyzer::lexicalAnalyzer(std::string_view buffer)
+lexicalAnalyzer::lexicalAnalyzer(std::string_view buffer, std::vector<Token>& tokens) : _tokens(tokens)
 {
     // std::string line;
     // int lineIdx = 0;
@@ -32,7 +32,7 @@ bool isNumber(std::string &val)
     // Check if the input matches the pattern
     return std::regex_match(val, number);
 }
-lexicalAnalyzer::TokenType lexicalAnalyzer::getType(std::string &val)
+TokenType lexicalAnalyzer::getType(std::string &val)
 {
     if (val == "true" || val == "false")
     {
@@ -52,7 +52,7 @@ lexicalAnalyzer::TokenType lexicalAnalyzer::getType(std::string &val)
     }
 }
 
-std::string lexicalAnalyzer::getString(lexicalAnalyzer::TokenType &type)
+std::string lexicalAnalyzer::getString(TokenType &type)
 {
     switch (type)
     {
@@ -114,7 +114,7 @@ void lexicalAnalyzer::getTokenType(std::string_view line, int idx, int& lineIdx)
                 if (line[idx] == '"')
                 {
                     val += line[idx];
-                    tokens.emplace_back(Token(STRINGTOKEN, val));
+                    _tokens.emplace_back(Token(STRINGTOKEN, val));
                     break;
                 }
                 val += line[idx++];
@@ -122,33 +122,33 @@ void lexicalAnalyzer::getTokenType(std::string_view line, int idx, int& lineIdx)
             if (idx == line.size())
             {
                 std::cout << "String started but never closed on line" << lineIdx << ' ' << val << '\n';
-                tokens.emplace_back(Token(UNKNOWNIDENTIFIER, val));
+                _tokens.emplace_back(Token(UNKNOWNIDENTIFIER, val));
                 return;
             }
         }
         else if (line[idx] == '{')
         {
-            tokens.emplace_back(Token(LEFTCURLYBRACES, std::string(1, line[idx])));
+            _tokens.emplace_back(Token(LEFTCURLYBRACES, std::string(1, line[idx])));
         }
         else if (line[idx] == '}')
         {
-            tokens.emplace_back(Token(RIGHTCURLYBRACES, std::string(1, line[idx])));
+            _tokens.emplace_back(Token(RIGHTCURLYBRACES, std::string(1, line[idx])));
         }
         else if (line[idx] == '[')
         {
-            tokens.emplace_back(Token(LEFTSQUAREBRACES, std::string(1, line[idx])));
+            _tokens.emplace_back(Token(LEFTSQUAREBRACES, std::string(1, line[idx])));
         }
         else if (line[idx] == ']')
         {
-            tokens.emplace_back(Token(RIGHTSQUAREBRACES, std::string(1, line[idx])));
+            _tokens.emplace_back(Token(RIGHTSQUAREBRACES, std::string(1, line[idx])));
         }
         else if (line[idx] == ':')
         {
-            tokens.emplace_back(Token(COLON, std::string(1, line[idx])));
+            _tokens.emplace_back(Token(COLON, std::string(1, line[idx])));
         }
         else if (line[idx] == ',')
         {
-            tokens.emplace_back(Token(COMMA, std::string(1, line[idx])));
+            _tokens.emplace_back(Token(COMMA, std::string(1, line[idx])));
         }
         else if (line[idx] == '\'')
         {
@@ -159,7 +159,7 @@ void lexicalAnalyzer::getTokenType(std::string_view line, int idx, int& lineIdx)
             }
             val += line[idx];
             std::cout << "Should be doubleQuotes here on line " << lineIdx << ' ' << val << '\n';
-            tokens.emplace_back(SINGLEERRORQUOTE, val);
+            _tokens.emplace_back(SINGLEERRORQUOTE, val);
         }
         else
         {
@@ -173,7 +173,7 @@ void lexicalAnalyzer::getTokenType(std::string_view line, int idx, int& lineIdx)
                 }
                 val += line[idx++];
             }
-            tokens.emplace_back(getType(val), val);
+            _tokens.emplace_back(getType(val), val);
         }
         idx++;
     }
@@ -186,10 +186,10 @@ bool lexicalAnalyzer::isCommaOrClosingBracket(char ch)
 
 bool lexicalAnalyzer::getlexicalResult()
 {
-    if (tokens.empty())
+    if (_tokens.empty())
         return false;
 
-    for (auto &[type, value] : tokens)
+    for (auto &[type, value] : _tokens)
     {
         if (type == UNKNOWNIDENTIFIER || type == SINGLEERRORQUOTE)
         {
