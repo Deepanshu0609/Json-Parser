@@ -21,8 +21,6 @@ bool parser::parseBraces()
     idx++; // parsed '{'
     if (!validateIdx())
     {
-        std::cout << "Failed at parseBraces\n"
-                  << idx << '\n';
         return false;
     }
     if (lexer.tokens[idx].type == lexer.STRINGTOKEN)
@@ -30,29 +28,21 @@ bool parser::parseBraces()
         idx++;
         if (!validateIdx())
         {
-            std::cout << "Failed at parseBraces\n"
-                      << idx << '\n';
             return false;
         }
         if (lexer.tokens[idx].type != lexer.COLON)
         {
-            std::cout << "Failed at parseBraces\n"
-                      << idx << '\n';
             return false;
         }
         idx++;
         if (!validateIdx())
         {
-            std::cout << "Failed at parseBraces\n"
-                      << idx << '\n';
             return false;
         }
         if (lexer.tokens[idx].type == lexer.LEFTCURLYBRACES)
         {
             if (!parseBraces())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
         }
@@ -60,8 +50,6 @@ bool parser::parseBraces()
         {
             if (!parseSquareBraces())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
         }
@@ -71,33 +59,25 @@ bool parser::parseBraces()
         }
         else
         {
-            std::cout << "Unknown Value encountered " << lexer.tokens[idx].value << '\n';
+            std::cout << "Unexpexted Value encountered " << lexer.tokens[idx].value << '\n';
             return false;
         }
         if (!validateIdx())
         {
-            std::cout << "Failed at parseBraces\n"
-                      << idx << '\n';
             return false;
         }
         if (lexer.tokens[idx].type == lexer.COMMA)
         {
             if (idx + 1 >= lexer.tokens.size())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
             if (isClosingBracket(lexer.tokens[idx + 1].type))
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
             if (!parseBraces())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
         }
@@ -107,8 +87,6 @@ bool parser::parseBraces()
         }
         else
         {
-            std::cout << "Failed at parseBraces\n"
-                      << idx << '\n';
             return false;
         }
     }
@@ -137,8 +115,6 @@ bool parser::parseSquareBraces()
         {
             if (!parseBraces())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
         }
@@ -147,8 +123,6 @@ bool parser::parseSquareBraces()
 
             if (!parseSquareBraces())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
         }
@@ -159,32 +133,23 @@ bool parser::parseSquareBraces()
 
         if (!validateIdx())
         {
-            std::cout << "Failed at parseBraces\n"
-                      << idx << '\n';
             return false;
         }
 
         if (lexer.tokens[idx].type == lexer.COMMA)
         {
-
             if (idx + 1 >= lexer.tokens.size())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
 
             if (isClosingBracket(lexer.tokens[idx + 1].type))
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
 
             if (!parseSquareBraces())
             {
-                std::cout << "Failed at parseBraces\n"
-                          << idx << '\n';
                 return false;
             }
         }
@@ -194,8 +159,7 @@ bool parser::parseSquareBraces()
         }
         else
         {
-            std::cout << "Failed at parseBraces\n"
-                      << idx << '\n';
+
             return false;
         }
     }
@@ -205,8 +169,6 @@ bool parser::parseSquareBraces()
     }
     else
     {
-        std::cout << "Failed at parseBraces\n"
-                  << idx << '\n';
         return false;
     }
     return true;
