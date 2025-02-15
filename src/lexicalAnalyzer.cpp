@@ -1,25 +1,20 @@
 #include "../include/lexicalAnalyzer.hpp"
 #include <regex>
 
-lexicalAnalyzer::lexicalAnalyzer(std::string_view buffer, std::vector<Token>& tokens) : _tokens(tokens)
+lexicalAnalyzer::lexicalAnalyzer(std::string_view buffer, std::vector<Token> &tokens) : _tokens(tokens)
 {
-    // std::string line;
-    // int lineIdx = 0;
-    // while (std::getline(file, line))
-    // {
-    //     getTokenType(line, 0, lineIdx++);
-    // }
-
     size_t start = 0, end = 0;
     int lineIdx = 0;
-    while ((end = buffer.find('\n', start)) != std::string_view::npos) {
+    while ((end = buffer.find('\n', start)) != std::string_view::npos)
+    {
         std::string_view line = buffer.substr(start, end - start);
         getTokenType(line, 0, lineIdx);
         start = end + 1;
     }
-    
+
     // Process last line (if no trailing newline)
-    if (start < buffer.size()) {
+    if (start < buffer.size())
+    {
         std::string_view line = buffer.substr(start);
         getTokenType(line, 0, lineIdx);
     }
@@ -83,7 +78,7 @@ std::string lexicalAnalyzer::getString(TokenType &type)
     }
 }
 
-void lexicalAnalyzer::getTokenType(std::string_view line, int idx, int& lineIdx)
+void lexicalAnalyzer::getTokenType(std::string_view line, int idx, int &lineIdx)
 {
     while (idx < line.size())
     {

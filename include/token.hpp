@@ -1,5 +1,6 @@
 #pragma once
-enum TokenType{
+enum TokenType
+{
     LEFTCURLYBRACES,
     RIGHTCURLYBRACES,
     COLON,
@@ -13,7 +14,8 @@ enum TokenType{
     SINGLEERRORQUOTE,
     UNKNOWNIDENTIFIER
 };
-struct Token{
+struct Token
+{
     TokenType type;
     std::string value;
     Token(TokenType t, std::string v) : type(t), value(std::move(v)) {}

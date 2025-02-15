@@ -7,9 +7,10 @@ class parser
 private:
     bool _parsing = true;
     int idx = 0;
-    std::vector<Token>& _tokens;
+    std::vector<Token> &_tokens;
+
 public:
-    parser(std::vector<Token>& token) : _tokens(token) {};
+    parser(std::vector<Token> &token) : _tokens(token) {};
     bool parse();
     bool parseBraces();
     bool parseSquareBraces();
